@@ -20,12 +20,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 //Setup Static Folder
 app.use(express.static("public"));
 
-
+//Array to store Posts
+let posts = [];
 //----- ROUTES ------//
 
 //Index - GET
 app.get("/",function(req,res){
   res.render("home",{startingContent:homeStartingContent});
+  console.log(posts);
 });
 
 //About - GET
@@ -38,6 +40,20 @@ app.get("/contact",function(req,res){
   res.render("contact",{contactUs:contactContent});
 });
 
+//Compose - GET
+app.get("/compose",function(req,res){
+  res.render("compose");
+});
+
+//Compose - POST
+app.post("/compose",function(req,res){
+  const post = {
+    title: req.body.postTitle,
+    content: req.body.postBody
+    };
+  posts.push(post);
+  res.redirect("/")
+});
 //----- SERVER ------//
 
 //Start Server
