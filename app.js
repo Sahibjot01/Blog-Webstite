@@ -16,7 +16,9 @@ const app = express();
 app.set('view engine', 'ejs');
 
 //Parse Body
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 //Setup Static Folder
 app.use(express.static("public"));
@@ -26,42 +28,53 @@ let posts = [];
 //----- ROUTES ------//
 
 //Index - GET
-app.get("/",function(req,res){
-  res.render("home",{startingContent:homeStartingContent,posts:posts});
+app.get("/", function(req, res) {
+  res.render("home", {
+    startingContent: homeStartingContent,
+    posts: posts
+  });
 
 });
 
 //About - GET
-app.get("/about",function(req,res){
-  res.render("about",{aboutUs:aboutContent});
+app.get("/about", function(req, res) {
+  res.render("about", {
+    aboutUs: aboutContent
+  });
 });
 
 //Contact - GET
-app.get("/contact",function(req,res){
-  res.render("contact",{contactUs:contactContent});
+app.get("/contact", function(req, res) {
+  res.render("contact", {
+    contactUs: contactContent
+  });
 });
 
 //Compose - GET
-app.get("/compose",function(req,res){
+app.get("/compose", function(req, res) {
   res.render("compose");
 });
 
 //Compose - POST
-app.post("/compose",function(req,res){
+app.post("/compose", function(req, res) {
   const post = {
     title: req.body.postTitle,
     content: req.body.postBody
-    };
+  };
   posts.push(post);
   res.redirect("/");
 });
 
-app.get("/posts/:postName",function(req,res){
+//Single Post - GET
+app.get("/posts/:postName", function(req, res) {
   const requestedTitle = _.lowerCase(req.params.postName);
-  posts.forEach(function(post){
+  posts.forEach(function(post) {
     const storedTitle = _.lowerCase(post.title);
-    if(requestedTitle === storedTitle){
-      console.log("Match-Found");
+    if (requestedTitle === storedTitle) {
+      res.render("post", {
+        title: post.title,
+        content: post.content
+      });
     }
   });
 });
